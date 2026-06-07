@@ -1,8 +1,24 @@
 import { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import hospitalIcon from "../assets/hospital.png";
 
 function Admin() {
+  const navigate = useNavigate();
+
+  const isAdmin = localStorage.getItem(
+    "adminLoggedIn"
+  );
+
+  if (!isAdmin) {
+    return (
+      <Navigate
+        to="/admin-login"
+        replace
+      />
+    );
+  }
+
   const [patients, setPatients] = useState([]);
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("All");
@@ -43,13 +59,25 @@ function Admin() {
     const today = new Date().toDateString();
 
     return (
-      new Date(patient.created_at).toDateString() === today
+      new Date(
+        patient.created_at
+      ).toDateString() === today
     );
   }).length;
 
   const departmentCount = new Set(
-    patients.map((patient) => patient.department)
+    patients.map(
+      (patient) => patient.department
+    )
   ).size;
+
+  const handleLogout = () => {
+    localStorage.removeItem(
+      "adminLoggedIn"
+    );
+
+    navigate("/admin-login");
+  };
 
   return (
     <div
@@ -94,11 +122,26 @@ function Admin() {
 
           <p
             style={{
-              color: "#6b7280"
+              color: "#6b7280",
+              marginBottom: "15px"
             }}
           >
             Manage patient registrations and tokens
           </p>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              background: "#dc2626",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer"
+            }}
+          >
+            Logout
+          </button>
         </div>
 
         {/* Statistics */}
@@ -196,8 +239,6 @@ function Admin() {
           </div>
         </div>
 
-        {/* Loading */}
-
         {loading && (
           <div
             style={{
@@ -208,8 +249,6 @@ function Admin() {
             <h3>Loading Patients...</h3>
           </div>
         )}
-
-        {/* Table */}
 
         {!loading && (
           <div
@@ -258,47 +297,49 @@ function Admin() {
                     </td>
                   </tr>
                 ) : (
-                  filteredPatients.map((patient) => (
-                    <tr key={patient.id}>
-                      <td style={tdStyle}>
-                        {patient.name}
-                      </td>
+                  filteredPatients.map(
+                    (patient) => (
+                      <tr key={patient.id}>
+                        <td style={tdStyle}>
+                          {patient.name}
+                        </td>
 
-                      <td style={tdStyle}>
-                        {patient.age}
-                      </td>
+                        <td style={tdStyle}>
+                          {patient.age}
+                        </td>
 
-                      <td style={tdStyle}>
-                        {patient.gender}
-                      </td>
+                        <td style={tdStyle}>
+                          {patient.gender}
+                        </td>
 
-                      <td style={tdStyle}>
-                        {patient.mobile}
-                      </td>
+                        <td style={tdStyle}>
+                          {patient.mobile}
+                        </td>
 
-                      <td style={tdStyle}>
-                        {patient.department}
-                      </td>
+                        <td style={tdStyle}>
+                          {patient.department}
+                        </td>
 
-                      <td
-                        style={{
-                          ...tdStyle,
-                          color: "#2563eb",
-                          fontWeight: "bold"
-                        }}
-                      >
-                        {patient.token}
-                      </td>
+                        <td
+                          style={{
+                            ...tdStyle,
+                            color: "#2563eb",
+                            fontWeight: "bold"
+                          }}
+                        >
+                          {patient.token}
+                        </td>
 
-                      <td style={tdStyle}>
-                        {patient.created_at
-                          ? new Date(
-                              patient.created_at
-                            ).toLocaleString()
-                          : "N/A"}
-                      </td>
-                    </tr>
-                  ))
+                        <td style={tdStyle}>
+                          {patient.created_at
+                            ? new Date(
+                                patient.created_at
+                              ).toLocaleString()
+                            : "N/A"}
+                        </td>
+                      </tr>
+                    )
+                  )
                 )}
               </tbody>
             </table>
@@ -332,7 +373,8 @@ const thStyle = {
 
 const tdStyle = {
   padding: "12px",
-  borderBottom: "1px solid #e5e7eb"
+  borderBottom:
+    "1px solid #e5e7eb"
 };
 
 export default Admin;

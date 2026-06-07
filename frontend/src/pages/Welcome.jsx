@@ -26,8 +26,6 @@ function Welcome() {
           textAlign: "center"
         }}
       >
-        {/* Hospital Icon */}
-
         <img
           src={hospitalIcon}
           alt="Hospital"
@@ -77,7 +75,7 @@ function Welcome() {
         </button>
 
         <button
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/admin-login")}
           style={{
             width: "100%",
             padding: "15px",
@@ -89,7 +87,7 @@ function Welcome() {
             cursor: "pointer"
           }}
         >
-          Admin Dashboard
+          Admin Login
         </button>
       </div>
     </div>

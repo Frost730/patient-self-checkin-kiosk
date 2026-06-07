@@ -9,6 +9,7 @@ import Welcome from "./pages/Welcome";
 import Register from "./pages/Register";
 import Token from "./pages/Token";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 function App() {
   return (
@@ -31,6 +32,12 @@ function App() {
         <Route
           path="/token"
           element={<Token />}
+        />
+
+        {/* Admin Login */}
+        <Route
+          path="/admin-login"
+          element={<AdminLogin />}
         />
 
         {/* Admin Dashboard */}
